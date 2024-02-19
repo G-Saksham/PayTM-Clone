@@ -1,9 +1,11 @@
+import {RecoilRoot} from 'recoil';
+import {Container} from './components/Container'
 
-function App() {
+function App(){
   return (
-    <div> 
-      Hi There!
-    </div>
+    <RecoilRoot>
+      <Container/>
+    </RecoilRoot>
   )
 }
 
