@@ -20,7 +20,6 @@ router.post("/signup", async (req, res) => {
 
     const payload = req.body;
     const isDataValid = userSchema.safeParse(payload);
-
     if (!isDataValid.success) {
       throw new Error("Incorrect inputs");
     }
@@ -28,13 +27,11 @@ router.post("/signup", async (req, res) => {
     const isExistingUser = !!(await User.findOne({
       username: payload.username,
     }));
-
     if (isExistingUser) {
       throw new Error("User already exists");
     }
 
     const newUser = await User.create(payload);
-
     await Account.create({
       userId: newUser._id,
       balance: 10000 * (Math.random() + 1),
@@ -51,7 +48,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.get("/signin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   try {
     const payload = req.body;
 
@@ -92,6 +89,33 @@ router.put("/", authMiddleware, async (req, res) => {
   res.status(200).json({
     msg: "Updated successfully",
   });
+});
+
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    const allUsers = await User.find({});
+    const currentUser = await User.findOne({ _id: req.userId });
+    res.status(200).json({
+      users: allUsers.map((user) => {
+        return {
+          _id: user._id,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        };
+      }),
+      currentUser: {
+        _id: currentUser._id,
+        username: currentUser.username,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "Can't access the database",
+    });
+  }
 });
 
 router.get("/bulk", async (req, res) => {
