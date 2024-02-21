@@ -2,5 +2,8 @@
 
 Try to build a Paytm like app (using MERN stack), Having basic feature like:
 
-- SignUp/SignIn feature
-- Send money to friends/family (Search them using their names)
+- Simply SignUp/SignIn
+
+- Transfer money to friends/family
+
+- Used recoil for state management
